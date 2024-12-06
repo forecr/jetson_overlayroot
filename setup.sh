@@ -5,7 +5,22 @@ if [ "$(whoami)" != "root" ] ; then
 	exit 1
 fi
 
-# Check GtkTerm installed
+if [ "$(cat /etc/nv_tegra_release | grep -c '# R32 (release)')" == "1" ]; then
+	echo "JetPack-4.x based system detected"
+elif [ "$(cat /etc/nv_tegra_release | grep -c '# R35 (release)')" == "1" ]; then
+	echo "JetPack-5.x based system detected"
+	echo "Unsupported system"
+	exit 1
+elif [ "$(cat /etc/nv_tegra_release | grep -c '# R36 (release)')" == "1" ]; then
+	echo "JetPack-6.x based system detected"
+	echo "Unsupported system"
+	exit 1
+else
+	echo "Could not detect the JetPack version"
+	exit 1
+fi
+
+# Check overlayroot installed
 REQUIRED_PKG="overlayroot"
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
 echo "Checking for $REQUIRED_PKG: $PKG_OK"
